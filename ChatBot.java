@@ -15,12 +15,33 @@ public class ChatBot{
   */
   public String getResponse(String statement){
     String response = "";
-    if(statement.indexOf("no")>=0){
+
+    String lowerStatement = statement.toLowerCase();
+
+    // check for characters
+    if (statement.trim() == "") {
+      response = "Please say something.";
+    } else {
+    // find response
+    if (findKeyword(lowerStatement, "i want to", 0) != -1) {
+      response = transformIWantToStatement(lowerStatement);
+    } else if(findKeyword(lowerStatement, "i want", 0) != -1) {
+      response = transformIWantStatement(lowerStatement);
+    } else if(findKeyword(lowerStatement, "i") != -1 && findKeyword(lowerStatement, "you") != -1) {
+      response = transformIYouStatement(lowerStatement);
+    } else if(findKeyword(lowerStatement, "you") != -1 && findKeyword(lowerStatement, "me") != -1) {
+      response = transformYouMeStatement(lowerStatement);
+    } else if(findKeyword(lowerStatement, "no", 0) != -1 || findKeyword(lowerStatement, "nope", 0) != -1 || findKeyword(lowerStatement, "never", 0) != -1){
       response = "Why so negative?";
-    }else if(statement.indexOf("mother")>0 ||  statement.indexOf("father")>0 || statement.indexOf("sister")>0 || statement.indexOf("brother")>0){
+    } else if (findKeyword(lowerStatement, "joseph zeller", 0) != -1) {
+      response = "Ahh, what a great teacher.";
+    }else if(findKeyword(lowerStatement, "mother", 0) != -1 || findKeyword(lowerStatement, "father", 0) != -1 || findKeyword(lowerStatement, "sister", 0) != -1 || findKeyword(lowerStatement, "brother", 0) != -1){
       response = "Tell me more about your family.";
+    }else if (findKeyword(lowerStatement, "dog", 0) != -1 || findKeyword(lowerStatement, "cat", 0) != -1 || findKeyword(lowerStatement, "gerbil", 0) != -1) {
+      response = "Tell me more about your pets.";
     }else{
       response = getRandomResponse();
+    }
     }
     return response;
   }
@@ -30,10 +51,12 @@ public class ChatBot{
   * @return a non-commital string
   */
   private String getRandomResponse(){
-    int numberOfResponses = 4;
+    int numberOfResponses = 7;
     double r = Math.random();
     int whichResponse = (int)(r*numberOfResponses);
     String response = "";
+
+// NOTE: This would be incredibly more efficient with an array...
 
     if(whichResponse==0){
       response = "Interesting, tell me more.";
@@ -43,6 +66,12 @@ public class ChatBot{
       response = "Do you really think so?";
     }else if(whichResponse==3){
       response = "You don't say.";
+      }else if(whichResponse==3){
+      response = "Uhhhhhhh... ok.";
+      }else if(whichResponse==3){
+      response = "Wow, that's so intersting.";
+      }else if(whichResponse==3){
+      response = "I'm happy to hear that...";
     }
     return response;
   }
@@ -144,4 +173,30 @@ public class ChatBot{
 		String restOfStatement = statement.substring(psnOfYou + 3, psnOfMe).trim();
 		return "What makes you think that I " + restOfStatement + " you?";
 	}
+
+  private String transformIWantStatement(String statement){
+  statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals(".")){
+			statement = statement.substring(0, statement.length() - 1);
+		}
+    
+    int psn = findKeyword(statement, "I want", 0);
+    String restOfStatement = statement.substring(psn + 6).trim();
+		return "Would you really be happy if you had " + restOfStatement + "?";
+}
+
+private String transformIYouStatement(String statement){
+  statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals(".")){
+			statement = statement.substring(0, statement.length() - 1);
+		}
+
+    int psnOfI = findKeyword (statement, "i", 0);
+		int psnOfYou = findKeyword (statement, "you", psnOfI + 1);
+
+		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
+		return "Why do you " + restOfStatement + " me?";
+}
 }

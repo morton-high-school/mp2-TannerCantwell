@@ -42,3 +42,6 @@ method to respond to each of these.
 
 Question 1
 What are some unintended issues that can occur with the chatbot?
+
+- The chatbot will prioritize some keywords over others. For example, I could have a pet and a family member present in my statment, but it would only mention the pet.
+- I can say something along the lines of "My dog just died..." and I could get a response like "Do you really think so?" This would be incredibly insensitive.
